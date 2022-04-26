@@ -85,9 +85,7 @@ public struct CardStack<Direction: CardSwipeDirection, Element: Identifiable, Co
     private func offset(for direction: Direction?, in geometry: GeometryProxy) -> CGSize {
         guard let direction = direction else { return .zero }
         
-        guard let fourDirection = direction as? FourDirections else { return .zero }
-        let angle = fourDirection.angle
-        
+        let angle = direction.angle
         let width = geometry.size.width
         let height = geometry.size.height
         
