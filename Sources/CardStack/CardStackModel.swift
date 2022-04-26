@@ -26,8 +26,8 @@ public class CardStackData<Element: Identifiable, Direction: Equatable>: Identif
 
 public class CardStackModel<Element: Identifiable, Direction: Equatable>: ObservableObject {
     
-    @Published var data: [CardStackData<Element, Direction>]
-    @Published var currentIndex: Int?
+    @Published public var data: [CardStackData<Element, Direction>]
+    @Published private(set) public var currentIndex: Int?
         
     public init(_ elements: [Element]) {
         data = elements.map { CardStackData($0) }
