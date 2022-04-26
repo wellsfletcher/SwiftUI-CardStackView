@@ -1,10 +1,3 @@
-//
-//  CardStackModel.swift
-//  BruxOrNot
-//
-//  Created by Romain Vincens on 22/04/2022.
-//
-
 import Foundation
 import SwiftUI
 import CoreGraphics
