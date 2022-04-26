@@ -29,7 +29,7 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
     @Published var data: [CardStackData<Element, Direction>]
     @Published var currentIndex: Int?
         
-    init(_ elements: [Element]) {
+    public init(_ elements: [Element]) {
         data = elements.map { CardStackData($0) }
         currentIndex = elements.count > 0 ? 0 : nil
     }
@@ -39,7 +39,7 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
         return index - (currentIndex ?? data.count)
     }
     
-    func swipe(direction: Direction, completion: ((Direction) -> Void)?) {
+    public func swipe(direction: Direction, completion: ((Direction) -> Void)?) {
         guard let currentIndex = currentIndex else {
             return
         }
@@ -56,7 +56,7 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
         completion?(direction)
     }
     
-    func unswipe() {
+    public func unswipe() {
         
         var currentIndex: Int! = self.currentIndex
         if currentIndex == nil {
