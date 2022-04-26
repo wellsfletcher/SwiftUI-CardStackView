@@ -26,12 +26,21 @@ public class CardStackData<Element: Identifiable, Direction: Equatable>: Identif
 
 public class CardStackModel<Element: Identifiable, Direction: Equatable>: ObservableObject {
     
-    @Published public var data: [CardStackData<Element, Direction>]
+    @Published private(set) var data: [CardStackData<Element, Direction>]
     @Published private(set) public var currentIndex: Int?
         
     public init(_ elements: [Element]) {
         data = elements.map { CardStackData($0) }
         currentIndex = elements.count > 0 ? 0 : nil
+    }
+    
+    public func setElements(_ elements: [Element]) {
+        data = elements.map { CardStackData($0) }
+        currentIndex = elements.count > 0 ? 0 : nil
+    }
+    
+    public func addElement(_ element: Element) {
+        data.append(CardStackData(element))
     }
     
     func indexInStack(_ dataPiece: CardStackData<Element, Direction>) -> Int? {
