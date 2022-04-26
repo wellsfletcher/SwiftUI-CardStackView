@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		902171F32817F95F003A76DD /* CardStack in Frameworks */ = {isa = PBXBuildFile; productRef = 902171F22817F95F003A76DD /* CardStack */; };
 		FBB08B6E2445186200385E5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB08B6D2445186200385E5A /* AppDelegate.swift */; };
 		FBB08B702445186200385E5A /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB08B6F2445186200385E5A /* SceneDelegate.swift */; };
 		FBB08B722445186200385E5A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB08B712445186200385E5A /* ContentView.swift */; };
 		FBB08B742445186500385E5A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FBB08B732445186500385E5A /* Assets.xcassets */; };
 		FBB08B772445186500385E5A /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FBB08B762445186500385E5A /* Preview Assets.xcassets */; };
 		FBB08B7A2445186500385E5A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FBB08B782445186500385E5A /* LaunchScreen.storyboard */; };
-		FBF3C4E8244A2DD4000AC410 /* CardStack in Frameworks */ = {isa = PBXBuildFile; productRef = FBF3C4E7244A2DD4000AC410 /* CardStack */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,7 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FBF3C4E8244A2DD4000AC410 /* CardStack in Frameworks */,
+				902171F32817F95F003A76DD /* CardStack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,7 +94,7 @@
 			);
 			name = iOSExample;
 			packageProductDependencies = (
-				FBF3C4E7244A2DD4000AC410 /* CardStack */,
+				902171F22817F95F003A76DD /* CardStack */,
 			);
 			productName = Example;
 			productReference = FBB08B6A2445186200385E5A /* CardStackExample.app */;
@@ -125,7 +125,7 @@
 			);
 			mainGroup = FBB08B612445186200385E5A;
 			packageReferences = (
-				FBF3C4E6244A2DD4000AC410 /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */,
+				902171F12817F95F003A76DD /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */,
 			);
 			productRefGroup = FBB08B6B2445186200385E5A /* Products */;
 			projectDirPath = "";
@@ -352,20 +352,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		FBF3C4E6244A2DD4000AC410 /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */ = {
+		902171F12817F95F003A76DD /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/dadalar/SwiftUI-CardStackView.git";
+			repositoryURL = "https://github.com/nomadplanet/SwiftUI-CardStackView.git";
 			requirement = {
-				kind = exactVersion;
-				version = 0.0.3;
+				branch = rework;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		FBF3C4E7244A2DD4000AC410 /* CardStack */ = {
+		902171F22817F95F003A76DD /* CardStack */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = FBF3C4E6244A2DD4000AC410 /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */;
+			package = 902171F12817F95F003A76DD /* XCRemoteSwiftPackageReference "SwiftUI-CardStackView" */;
 			productName = CardStack;
 		};
 /* End XCSwiftPackageProductDependency section */

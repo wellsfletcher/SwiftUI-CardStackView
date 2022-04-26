@@ -1,104 +1,100 @@
 import SwiftUI
 
-public struct CardStack<Direction, ID: Hashable, Data: RandomAccessCollection, Content: View>: View
-where Data.Index: Hashable {
-
-  @Environment(\.cardStackConfiguration) private var configuration: CardStackConfiguration
-  @State private var currentIndex: Data.Index
-
-  private let direction: (Double) -> Direction?
-  private let data: Data
-  private let id: KeyPath<Data.Element, ID>
-  private let onSwipe: (Data.Element, Direction) -> Void
-  private let content: (Data.Element, Direction?, Bool) -> Content
-
-  public init(
-    direction: @escaping (Double) -> Direction?,
-    data: Data,
-    id: KeyPath<Data.Element, ID>,
-    onSwipe: @escaping (Data.Element, Direction) -> Void,
-    @ViewBuilder content: @escaping (Data.Element, Direction?, Bool) -> Content
-  ) {
-    self.direction = direction
-    self.data = data
-    self.id = id
-    self.onSwipe = onSwipe
-    self.content = content
-
-    self._currentIndex = State<Data.Index>(initialValue: data.startIndex)
-  }
-
-  public var body: some View {
-    ZStack {
-      ForEach(data.indices.reversed(), id: \.self) { index -> AnyView in
-        let relativeIndex = self.data.distance(from: self.currentIndex, to: index)
-        if relativeIndex >= 0 && relativeIndex < self.configuration.maxVisibleCards {
-          return AnyView(self.card(index: index, relativeIndex: relativeIndex))
-        } else {
-          return AnyView(EmptyView())
+public struct CardStack<Direction: CardSwipeDirection, Element: Identifiable, Content: View>: View {
+    
+    @Environment(\.cardStackConfiguration) private var configuration: CardStackConfiguration
+    
+    @ObservedObject var model: CardStackModel<Element, Direction>
+    
+    @State private var ongoingDirection: Direction? {
+        didSet {
+            if oldValue != ongoingDirection {
+                onChange?(ongoingDirection)
+            }
         }
-      }
     }
-  }
-
-  private func card(index: Data.Index, relativeIndex: Int) -> some View {
-    CardView(
-      direction: direction,
-      isOnTop: relativeIndex == 0,
-      onSwipe: { direction in
-        self.onSwipe(self.data[index], direction)
-        self.currentIndex = self.data.index(after: index)
-      },
-      content: { direction in
-        self.content(self.data[index], direction, relativeIndex == 0)
-          .offset(
-            x: 0,
-            y: CGFloat(relativeIndex) * self.configuration.cardOffset
-          )
-          .scaleEffect(
-            1 - self.configuration.cardScale * CGFloat(relativeIndex),
-            anchor: .bottom
-          )
-      }
-    )
-  }
-
-}
-
-extension CardStack where Data.Element: Identifiable, ID == Data.Element.ID {
-
-  public init(
-    direction: @escaping (Double) -> Direction?,
-    data: Data,
-    onSwipe: @escaping (Data.Element, Direction) -> Void,
-    @ViewBuilder content: @escaping (Data.Element, Direction?, Bool) -> Content
-  ) {
-    self.init(
-      direction: direction,
-      data: data,
-      id: \Data.Element.id,
-      onSwipe: onSwipe,
-      content: content
-    )
-  }
-
-}
-
-extension CardStack where Data.Element: Hashable, ID == Data.Element {
-
-  public init(
-    direction: @escaping (Double) -> Direction?,
-    data: Data,
-    onSwipe: @escaping (Data.Element, Direction) -> Void,
-    @ViewBuilder content: @escaping (Data.Element, Direction?, Bool) -> Content
-  ) {
-    self.init(
-      direction: direction,
-      data: data,
-      id: \Data.Element.self,
-      onSwipe: onSwipe,
-      content: content
-    )
-  }
-
+    
+    private let onChange: ((Direction?) -> Void)?
+    private let onSwipe: (Element, Direction) -> Void
+    private let content: (Element, Direction?) -> Content
+    
+    public init(
+        model: CardStackModel<Element, Direction>,
+        onChange: ((Direction?) -> Void)? = nil,
+        onSwipe: @escaping (Element, Direction) -> Void,
+        @ViewBuilder content: @escaping (Element, Direction?) -> Content
+    ) {
+        self.model = model
+        self.onChange = onChange
+        self.onSwipe = onSwipe
+        self.content = content
+    }
+    
+    public var body: some View {
+        ZStack {
+            
+            GeometryReader { geometry in
+                ForEach(model.data.reversed()) { dataPiece -> AnyView in
+                    
+                    let indexInStack = model.indexInStack(dataPiece) ?? 0
+                    
+                    if
+                        let index = model.data.firstIndex(where: { $0.id == dataPiece.id }),
+                        indexInStack < configuration.maxVisibleCards
+                    {
+                        return AnyView(
+                            CardView(
+                                isOnTop: index == model.currentIndex,
+                                offset: offset(for: dataPiece.direction, in: geometry),
+                                onChange: { direction in
+                                    ongoingDirection = direction
+                                },
+                                onSwipe: { direction, translation in
+                                    model.swipe(direction: direction, completion: { direction in
+                                        onSwipe(dataPiece.element, direction)
+                                    })
+                                },
+                                content: { ongoingDirection in
+                                    content(dataPiece.element, dataPiece.direction ?? ongoingDirection)
+                                        .offset(
+                                            x: 0,
+                                            y: CGFloat(indexInStack) * configuration.cardOffset
+                                        )
+                                        .scaleEffect(
+                                            scaleEffect(indexInStack),
+                                            anchor: .bottom
+                                        )
+                                        .zIndex(Double(index))
+                                }
+                            )
+                        )
+                    } else {
+                        return AnyView(EmptyView())
+                    }
+                }
+            }
+            
+        }
+    }
+    
+    private func scaleEffect(_ cardIndex: Int) -> CGFloat {
+        if cardIndex < 0 { return 1 }
+        return 1 - configuration.cardScale * CGFloat(cardIndex)
+    }
+    
+    private func offset(for direction: Direction?, in geometry: GeometryProxy) -> CGSize {
+        guard let direction = direction else { return .zero }
+        
+        guard let fourDirection = direction as? FourDirections else { return .zero }
+        let angle = fourDirection.angle
+        
+        let width = geometry.size.width
+        let height = geometry.size.height
+        
+        return CGSize(
+            width: cos(angle.radians) * width * 2.0,
+            height: sin(angle.radians) * -height * 2.0
+        )
+    }
+    
 }
