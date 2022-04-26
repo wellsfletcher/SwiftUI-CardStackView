@@ -28,7 +28,7 @@ public enum LeftRight: CardSwipeDirection {
         switch angle.normalized.radians {
         case 3 * .pi / 4 ..< 5 * .pi / 4: return .left
         case 0 ..< .pi / 4: return .right
-        case 7 * .pi / 4 ..< 0: return .right
+        case 7 * .pi / 4 ..< 2 * .pi: return .right
         default: return nil
         }
     }
