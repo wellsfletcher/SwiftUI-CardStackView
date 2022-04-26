@@ -70,7 +70,7 @@ public enum FourDirections: CardSwipeDirection {
     }
 }
 
-extension Angle {
+public extension Angle {
     
     var normalized: Angle {
         if self.radians < 0 { return .radians(self.radians + 2 * .pi) }
