@@ -41,11 +41,12 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
         return index - (currentIndex ?? data.count)
     }
     
-    public func swipe(direction: Direction, completion: ((Direction) -> Void)?) {
+    public func swipe(direction: Direction, completion: ((Element, Direction) -> Void)?) {
         guard let currentIndex = currentIndex else {
             return
         }
         
+        let element = data[currentIndex].element
         data[currentIndex].direction = direction
 
         let nextIndex = currentIndex + 1
@@ -55,7 +56,7 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
             self.currentIndex = nil
         }
         
-        completion?(direction)
+        completion?(element, direction)
     }
     
     public func unswipe() {

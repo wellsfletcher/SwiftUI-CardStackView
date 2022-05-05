@@ -50,8 +50,8 @@ public struct CardStack<Direction: CardSwipeDirection, Element: Identifiable, Co
                                     ongoingDirection = direction
                                 },
                                 onSwipe: { direction, translation in
-                                    model.swipe(direction: direction, completion: { direction in
-                                        onSwipe(dataPiece.element, direction)
+                                    model.swipe(direction: direction, completion: { element, direction in
+                                        onSwipe(element, direction)
                                     })
                                 },
                                 content: { ongoingDirection in
