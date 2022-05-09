@@ -32,8 +32,12 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
         currentIndex = elements.count > 0 ? 0 : nil
     }
     
-    public func addElement(_ element: Element) {
+    public func appendElement(_ element: Element) {
         data.append(CardStackData(element))
+    }
+    
+    public func appendElements(_ elements: [Element]) {
+        data.append(contentsOf: elements.map { CardStackData($0) })
     }
     
     func indexInStack(_ dataPiece: CardStackData<Element, Direction>) -> Int? {
