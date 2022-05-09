@@ -34,15 +34,12 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
     
     public func appendElement(_ element: Element) {
         data.append(CardStackData(element))
+        if currentIndex == nil { currentIndex = 0 }
     }
     
     public func appendElements(_ elements: [Element]) {
         data.append(contentsOf: elements.map { CardStackData($0) })
-    }
-    
-    func indexInStack(_ dataPiece: CardStackData<Element, Direction>) -> Int? {
-        guard let index = data.firstIndex(where: { $0.id == dataPiece.id }) else { return nil }
-        return index - (currentIndex ?? data.count)
+        if currentIndex == nil { currentIndex = 0 }
     }
     
     public func swipe(direction: Direction, completion: ((Element, Direction) -> Void)?) {
@@ -76,5 +73,11 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
             self.currentIndex = previousIndex
         }
     }
+    
+    internal func indexInStack(_ dataPiece: CardStackData<Element, Direction>) -> Int? {
+        guard let index = data.firstIndex(where: { $0.id == dataPiece.id }) else { return nil }
+        return index - (currentIndex ?? data.count)
+    }
+    
     
 }
