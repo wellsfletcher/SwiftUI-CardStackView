@@ -19,7 +19,7 @@ public class CardStackData<Element: Identifiable, Direction: Equatable>: Identif
 
 public class CardStackModel<Element: Identifiable, Direction: Equatable>: ObservableObject {
     
-    @Published private(set) var data: [CardStackData<Element, Direction>]
+    @Published private(set) public var data: [CardStackData<Element, Direction>]
     @Published private(set) public var currentIndex: Int?
         
     public init(_ elements: [Element]) {
