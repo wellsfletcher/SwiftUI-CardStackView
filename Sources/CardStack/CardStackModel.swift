@@ -1,3 +1,4 @@
+import Combine
 import Foundation
 import SwiftUI
 import CoreGraphics
@@ -19,12 +20,28 @@ public class CardStackData<Element: Identifiable, Direction: Equatable>: Identif
 
 public class CardStackModel<Element: Identifiable, Direction: Equatable>: ObservableObject {
     
-    @Published private(set) public var data: [CardStackData<Element, Direction>]
-    @Published private(set) public var currentIndex: Int?
+    @Published private(set) public var hasVisibleElements: Bool
+
+    @Published private(set) var data: [CardStackData<Element, Direction>]
+    @Published private(set) var currentIndex: Int?
+    
+    private var subscriptions: Set<AnyCancellable> = []
         
     public init(_ elements: [Element]) {
         data = elements.map { CardStackData($0) }
         currentIndex = elements.count > 0 ? 0 : nil
+        hasVisibleElements = elements.count > 0
+        
+        $data.combineLatest($currentIndex)
+            .sink { [weak self] data, index in
+                guard let self = self else { return }
+                guard let index = index else {
+                    self.hasVisibleElements = false
+                    return
+                }
+                self.hasVisibleElements = data.count > index
+            }
+            .store(in: &subscriptions)
     }
     
     public func setElements(_ elements: [Element]) {
