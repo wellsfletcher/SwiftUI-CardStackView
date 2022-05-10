@@ -42,6 +42,11 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
         if currentIndex == nil { currentIndex = 0 }
     }
     
+    public func removeAllElements() {
+        data.removeAll()
+        currentIndex = nil
+    }
+    
     public func swipe(direction: Direction, completion: ((Element, Direction) -> Void)?) {
         guard let currentIndex = currentIndex else {
             return
