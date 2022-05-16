@@ -20,6 +20,7 @@ public class CardStackData<Element: Identifiable, Direction: Equatable>: Identif
 
 public class CardStackModel<Element: Identifiable, Direction: Equatable>: ObservableObject {
     
+    @Published private(set) public var numberOfElements: Int
     @Published private(set) public var numberOfElementsRemaining: Int
 
     @Published private(set) var data: [CardStackData<Element, Direction>]
@@ -30,13 +31,21 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
     public init(_ elements: [Element]) {
         data = elements.map { CardStackData($0) }
         currentIndex = elements.count > 0 ? 0 : nil
+        numberOfElements = elements.count
         numberOfElementsRemaining = elements.count
         
-        $data.combineLatest($currentIndex)
-            .sink { [weak self] data, index in
+        $data
+            .sink { [weak self] data in
+                guard let self = self else { return }
+                self.numberOfElements = data.count
+            }
+            .store(in: &subscriptions)
+        
+        $numberOfElements.combineLatest($currentIndex)
+            .sink { [weak self] number, index in
                 guard let self = self else { return }
                 if let index = index  {
-                    self.numberOfElementsRemaining = data.count - index
+                    self.numberOfElementsRemaining = number - index
                 } else {
                     self.numberOfElementsRemaining = 0
                 }
