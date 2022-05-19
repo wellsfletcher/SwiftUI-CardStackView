@@ -56,14 +56,12 @@ public struct CardStack<Direction: CardSwipeDirection, Element: Identifiable, Co
                                 },
                                 content: { ongoingDirection in
                                     content(dataPiece.element, dataPiece.direction ?? ongoingDirection)
-                                        .offset(
-                                            x: 0,
-                                            y: CGFloat(indexInStack) * configuration.cardOffset
-                                        )
+                                        .offset(cardOffsetEffect(indexInStack))
                                         .scaleEffect(
-                                            scaleEffect(indexInStack),
+                                            cardScaleEffect(indexInStack),
                                             anchor: .bottom
                                         )
+                                        .opacity(cardOpacity(indexInStack))
                                         .zIndex(Double(index))
                                 }
                             )
@@ -77,9 +75,19 @@ public struct CardStack<Direction: CardSwipeDirection, Element: Identifiable, Co
         }
     }
     
-    private func scaleEffect(_ cardIndex: Int) -> CGFloat {
+    private func cardScaleEffect(_ cardIndex: Int) -> CGFloat {
         if cardIndex < 0 { return 1 }
         return 1 - configuration.cardScale * CGFloat(cardIndex)
+    }
+    
+    private func cardOffsetEffect(_ cardIndex: Int) -> CGSize {
+        if cardIndex < 0 { return .zero }
+        return .init(width: 0, height: CGFloat(cardIndex) * configuration.cardOffset)
+    }
+    
+    private func cardOpacity(_ cardIndex: Int) -> CGFloat {
+        if cardIndex < 0 { return 0.0 }
+        return 1.0
     }
     
     private func offset(for direction: Direction?, in geometry: GeometryProxy) -> CGSize {
