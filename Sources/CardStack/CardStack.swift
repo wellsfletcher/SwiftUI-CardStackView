@@ -86,7 +86,7 @@ public struct CardStack<Direction: CardSwipeDirection, Element: Identifiable, Co
     }
     
     private func cardOpacity(_ cardIndex: Int) -> CGFloat {
-        if cardIndex < 0 { return 0.0 }
+//        if cardIndex < 0 { return 0.0 }
         return 1.0
     }
     
