@@ -99,23 +99,36 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
             self.currentIndex = nil
         }
         
+        // returns that element you swiped on
         completion?(element, direction)
     }
     
-    public func unswipe(completion: () -> Void = {}) {
+    public func unswipe(completion: (Element?, Element?, Direction?) -> Void = {_,_,_ in }) {
+        var element: Element?
+        var newlyDisplayedElement: Element?
+        var direction: Direction?
         
         var currentIndex: Int! = self.currentIndex
         if currentIndex == nil {
+            // this usually happens when you're at the end of the stack
             currentIndex = data.count
+        } else {
+            element = data[currentIndex].element
         }
         
         let previousIndex = currentIndex - 1
         if previousIndex >= 0 {
+            direction = data[previousIndex].direction
+            newlyDisplayedElement = data[previousIndex].element
             data[previousIndex].direction = nil
             self.currentIndex = previousIndex
         }
         
-        completion()
+        // elementUnswipedOn, newlyDisplayedElement, direction
+        // previousElement, nextElement, direction
+        // should this return the element you unswiped on or the previous element?
+        // I feel like it should be the element you unswiped on, which should be able to be nil if you're at max index (or the list is empty? but that should never really happen; although it could if the app is bad)
+        completion(element, newlyDisplayedElement, direction)
     }
     
     internal func indexInStack(_ dataPiece: CardStackData<Element, Direction>) -> Int? {
