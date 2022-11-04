@@ -26,6 +26,14 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
     @Published private(set) var data: [CardStackData<Element, Direction>]
     @Published private(set) var currentIndex: Int?
     
+    public var index: Int {
+        return currentIndex ?? 0
+    }
+    
+    public var datum: Element? {
+        return data[index].element
+    }
+    
     private var subscriptions: Set<AnyCancellable> = []
         
     public init(_ elements: [Element]) {
