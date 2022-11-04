@@ -102,7 +102,7 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
         completion?(element, direction)
     }
     
-    public func unswipe() {
+    public func unswipe(completion: () -> Void = {}) {
         
         var currentIndex: Int! = self.currentIndex
         if currentIndex == nil {
@@ -114,6 +114,8 @@ public class CardStackModel<Element: Identifiable, Direction: Equatable>: Observ
             data[previousIndex].direction = nil
             self.currentIndex = previousIndex
         }
+        
+        completion()
     }
     
     internal func indexInStack(_ dataPiece: CardStackData<Element, Direction>) -> Int? {
